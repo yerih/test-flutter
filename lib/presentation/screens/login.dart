@@ -23,13 +23,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final userController = TextEditingController();
   final passController = TextEditingController();
   String errorMsg = '';
+  String successMsg = '';
 
   void signUp() async {
     try{
+      setState(() {errorMsg = ''; successMsg = '';});
       await authService.value.createAccount(email: userController.text, password: passController.text);
       debugPrint("Sign up: user = ${userController.text}, password = ${passController.text}");
       debugPrint("Sign up success");
-      setState(() {errorMsg = '';});
+      setState(() {successMsg = "Success! Now you can sign in!";});
     } on FirebaseAuthException catch (e){
       debugPrint("Sign up failed: ${e.message}. user = ${userController.text}, password = ${passController.text}");
       setState(() {errorMsg = e.message ?? 'There is an error';});
@@ -40,18 +42,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void signIn() async {
     try{
+      setState(() {errorMsg = ''; successMsg = '';});
       await authService.value.signIn(email: userController.text, password: passController.text);
       debugPrint("Sign in: user = ${userController.text}, password = ${passController.text}");
       debugPrint("Sign in success");
-      // setState(() {errorMsg = '';});
-      // authService.value.signOut();
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen(title: 'Home'))
       );
     } on FirebaseAuthException catch (e){
       debugPrint("Sign in failed: ${e.message}. user = ${userController.text}, password = ${passController.text}");
-      setState(() {errorMsg = e.message ?? 'There is an error';});
+      setState(() {errorMsg = e.message ?? 'There is an error'; successMsg = "";});
     } catch (e){
       debugPrint("last catch: $e");
     }
@@ -135,6 +136,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       errorMsg,
                       style: TextStyle(color: Colors.redAccent),
+                    ),
+
+                    Text(
+                      successMsg,
+                      style: TextStyle(color: Colors.green),
                     )
 
                   ],
