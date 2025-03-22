@@ -43,7 +43,7 @@ class AuthService{
     required String newPass,
     required String email,
   }) async {
-    AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+    AuthCredential credential = EmailAuthProvider.credential(email: email, password: currentPass);
     await currentUser!.reauthenticateWithCredential(credential);
     await currentUser!.updatePassword(newPass);
   }
