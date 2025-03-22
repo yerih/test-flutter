@@ -43,6 +43,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 .inversePrimary,
             title: Text(widget.title),
             automaticallyImplyLeading: false,
+            actions: [
+              TextButton(
+                  onPressed: signOut,
+                  child: Text(
+                    'Sign out',
+                    style: TextStyle(color: Colors.deepPurple, fontSize: 20),
+                  ),
+              )
+            ],
           ),
           body: Padding(
             padding: const EdgeInsets.all(10.0),
