@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/data/auth_service.dart';
+import 'package:myapp/presentation/screens/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.title});
@@ -42,8 +43,12 @@ class _LoginScreenState extends State<LoginScreen> {
       await authService.value.signIn(email: userController.text, password: passController.text);
       debugPrint("Sign in: user = ${userController.text}, password = ${passController.text}");
       debugPrint("Sign in success");
-      setState(() {errorMsg = '';});
-      authService.value.signOut();
+      // setState(() {errorMsg = '';});
+      // authService.value.signOut();
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen(title: 'Home'))
+      );
     } on FirebaseAuthException catch (e){
       debugPrint("Sign in failed: ${e.message}. user = ${userController.text}, password = ${passController.text}");
       setState(() {errorMsg = e.message ?? 'There is an error';});
