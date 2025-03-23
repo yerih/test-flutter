@@ -6,6 +6,7 @@ import 'package:myapp/data/auth_service.dart';
 import 'package:myapp/data/news_service.dart';
 
 import '../../core/models/newsModel.dart';
+import 'AddNewScreen.dart';
 import 'detail.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -51,12 +52,23 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.indigoAccent, // Change the button's color
+          onPressed: () { Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddNewScreen())
+          ); },
+          child: Icon(Icons.add, color: Colors.white), // Change the icon color
+        ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[NewsList(),],
+            children: <Widget>[
+              NewsList(),
+
+            ],
           ),
         ),
       ),

@@ -4,6 +4,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/core/models/extensions.dart';
 import 'package:myapp/core/models/newsModel.dart';
 import 'package:myapp/data/news_service.dart';
 
@@ -31,6 +32,7 @@ class _DetailScreenState extends State<DetailScreen> {
     }catch (e){
       debugPrint("SendComment: last catch: $e");
     }
+    Navigator.pop(context);
   }
 
 
@@ -64,19 +66,20 @@ class _DetailScreenState extends State<DetailScreen> {
                     ),
                     Text(
                       widget.new1.description,
-                      style: TextStyle(fontSize: 40),
+                      style: TextStyle(fontSize: 35),
                     ),
                     Text(
-                      widget.new1.created_by,
-                      style: TextStyle(fontSize: 25),
+                      'published by: ${widget.new1.created_by}',
+                      style: TextStyle(fontSize: 20),
                     ),
                     Text(
-                      widget.new1.date,
-                      style: TextStyle(fontSize: 25),
+                      widget.new1.date.formatDateTime(),
+                      style: TextStyle(fontSize: 15),
                     ),
+                    SizedBox(height: 20,),
                     Text(
                       'Comments:',
-                      style: TextStyle(fontSize: 25),
+                      style: TextStyle(fontSize: 20),
                     ),
                     CommentsList(widget.new1.comments),
                     CommentForm(sendComment),
