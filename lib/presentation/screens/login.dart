@@ -4,8 +4,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:myapp/data/auth_service.dart';
 import 'package:myapp/presentation/screens/home.dart';
+
+import '../../data/NotificationService.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.title});
@@ -40,7 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+
+
   void signIn() async {
+    NotificationService().showNotification(title: 'Sample title', body: 'It works!');
+
     try{
       setState(() {errorMsg = ''; successMsg = '';});
       await authService.value.signIn(email: userController.text, password: passController.text);
@@ -58,12 +65,14 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+
   @override
   void dispose() {
     passController.dispose();
     userController.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
