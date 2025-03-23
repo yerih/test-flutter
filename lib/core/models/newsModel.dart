@@ -52,7 +52,7 @@ class NewsModel {
       "date": date,
       "image": image,
       "created_by": created_by,
-      // "comments": comments.map((e) => e.toJson()).toList(),
+      "comments": comments.map((e) => e.toJson()).toList(),
     };
   }
 

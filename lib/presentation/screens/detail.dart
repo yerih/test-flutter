@@ -1,9 +1,11 @@
 
 
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/core/models/newsModel.dart';
+import 'package:myapp/data/news_service.dart';
 
 class DetailScreen extends StatefulWidget {
   const DetailScreen({super.key, required this.new1});
@@ -16,6 +18,20 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
 
+
+
+  void sendComment(CommentModel comment) async {
+    try{
+      // debugPrint("SendComment: user = ${comment.user}, comment = ${comment.text}");
+      widget.new1.comments.add(comment);
+      newsService.value.updateNews(widget.new1);
+      debugPrint("SendComment: success");
+    } on FirebaseAuthException catch (e){
+      debugPrint("SendComment: ${e.message}");
+    }catch (e){
+      debugPrint("SendComment: last catch: $e");
+    }
+  }
 
 
   @override
@@ -34,6 +50,8 @@ class _DetailScreenState extends State<DetailScreen> {
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
               child: Form(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
@@ -61,21 +79,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       style: TextStyle(fontSize: 25),
                     ),
                     CommentsList(widget.new1.comments),
-
-                    // TextFormField(
-                    //   keyboardType: TextInputType.emailAddress,
-                    //   controller: passController,
-                    //   textInputAction: TextInputAction.next,
-                    //   decoration: InputDecoration(
-                    //       labelText: 'Password',
-                    //       hintText: 'Enter password',
-                    //       prefixIcon: Icon(Icons.password),
-                    //       border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0))
-                    //   ),
-                    //   onChanged: (String value) {},
-                    //   validator: (value) { return value!.isEmpty ? 'Please enter password' : null;},
-                    // ),
-
+                    CommentForm(sendComment),
                   ],
                 ),
               ),
@@ -87,10 +91,9 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Widget CommentsList(List<CommentModel> comments) {
-    return SizedBox(
-        height: MediaQuery.sizeOf(context).height * 0.8,
-        width: MediaQuery.sizeOf(context).width,
-        child: ListView.builder(
+    return ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           itemCount: comments.length,
           itemBuilder: (context, index) {
             final comment = comments[index];
@@ -114,10 +117,63 @@ class _DetailScreenState extends State<DetailScreen> {
                 )
             );
           },
-        )
-    );
+        );
   }
 
+  Widget CommentForm(void Function(CommentModel) onSendComment) {
+    final userController = TextEditingController();
+    final commentController = TextEditingController();
+
+    return Form(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+              Text(
+                'Add comment:',
+                style: TextStyle(fontSize: 15),
+              ),
+              SizedBox(height: 10,),
+              TextFormField(
+                keyboardType: TextInputType.text,
+                controller: userController,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                    labelText: 'Name',
+                    hintText: 'your name',
+                    prefixIcon: Icon(Icons.password),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0))
+                ),
+              ),
+              SizedBox(height: 10,),
+              TextFormField(
+                keyboardType: TextInputType.text,
+                controller: commentController,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                    labelText: 'Comment',
+                    hintText: 'your comment',
+                    prefixIcon: Icon(Icons.password),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0))
+                ),
+              ),
+
+
+            MaterialButton(
+              onPressed: () => onSendComment(CommentModel(user: userController.text, text: commentController.text)),
+              minWidth: double.infinity,
+              color: Colors.deepPurple,
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+              child: Text('Send'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
 }
 

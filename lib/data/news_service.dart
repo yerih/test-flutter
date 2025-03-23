@@ -29,6 +29,10 @@ class NewsService {
   void addNew(NewsModel newObj) async {
     _news.add(newObj);
   }
+
+  void updateNews(NewsModel new1) {
+    db.collection("news").doc(new1.id).update(new1.toJson());
+  }
 }
 
 
