@@ -17,6 +17,7 @@ class NewsService {
     db.enableNetwork();
     _news = db.collection("news").withConverter<NewsModel>(
         fromFirestore: (snapshots, _) => NewsModel.fromJson(snapshots.data()!),
+        // fromFirestore: (snapshots, _) => NewsModel.fromJson(snapshots.data()!),
         toFirestore: (newsModel, _) => newsModel.toJson()
     );
   }

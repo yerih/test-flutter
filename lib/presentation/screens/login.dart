@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try{
       setState(() {errorMsg = ''; successMsg = '';});
       await authService.value.createAccount(email: userController.text, password: passController.text);
-      debugPrint("Sign up: user = ${userController.text}, password = ${passController.text}");
+      // debugPrint("Sign up: user = ${userController.text}, password = ${passController.text}");
       debugPrint("Sign up success");
       setState(() {successMsg = "Success! Now you can sign in!";});
     } on FirebaseAuthException catch (e){
@@ -44,8 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
     try{
       setState(() {errorMsg = ''; successMsg = '';});
       await authService.value.signIn(email: userController.text, password: passController.text);
-      debugPrint("Sign in: user = ${userController.text}, password = ${passController.text}");
-      debugPrint("Sign in success");
+      // debugPrint("Sign in: user = ${userController.text}, password = ${passController.text}");
+      // debugPrint("Sign in success");
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen(title: 'Home'))

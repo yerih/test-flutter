@@ -25,16 +25,25 @@ class _DetailScreenState extends State<DetailScreen> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.new1.title),
       ),
-      body:  Center(
+      body:  SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
               child: Form(
                 child: Column(
                   children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        widget.new1.image,
+                        width: double.infinity,
+                        height: 300,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                     Text(
                       widget.new1.description,
                       style: TextStyle(fontSize: 40),
@@ -47,6 +56,11 @@ class _DetailScreenState extends State<DetailScreen> {
                       widget.new1.date,
                       style: TextStyle(fontSize: 25),
                     ),
+                    Text(
+                      'Comments:',
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    CommentsList(widget.new1.comments),
 
                     // TextFormField(
                     //   keyboardType: TextInputType.emailAddress,
@@ -71,4 +85,39 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
     );
   }
+
+  Widget CommentsList(List<CommentModel> comments) {
+    return SizedBox(
+        height: MediaQuery.sizeOf(context).height * 0.8,
+        width: MediaQuery.sizeOf(context).width,
+        child: ListView.builder(
+          itemCount: comments.length,
+          itemBuilder: (context, index) {
+            final comment = comments[index];
+            debugPrint(comment.user);
+            return Padding(
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                child: Card(
+                  elevation: 4,
+                  margin: EdgeInsets.only(bottom: 10),
+                  child:
+                  ListTile(
+                    leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: CircleAvatar()
+                    )
+                    ,
+                    title: Text(comment.user),
+                    subtitle: Text(comment.text),
+                    // title: Text("${snapshot.data!.docs[index]["title"]}"),
+                  ),
+                )
+            );
+          },
+        )
+    );
+  }
+
+
 }
+

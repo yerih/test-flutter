@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/async.dart';
 import 'package:json_annotation/json_annotation.dart';
 // part '';//''newsModel.g.dart';
@@ -13,7 +14,7 @@ class NewsModel {
 
   String created_by;
 
-  // CommentModel comments;
+  List<CommentModel> comments;
 
   NewsModel({
     required this.id,
@@ -22,6 +23,7 @@ class NewsModel {
     required this.date,
     required this.image,
     required this.created_by,
+    this.comments = const [],
     // required this.comments
   });
 
@@ -33,46 +35,14 @@ class NewsModel {
         date: json['date'] as String,
         image: json['image'] as String,
         created_by: json['created_by'] as String,
+        // comments: (json['comments'] as List<CommentModel?>)
+        //     .map((e) => CommentModel.fromJson(e as Map<String, dynamic>))
+        //     .toList(),
+        // comments: (json['comments'] as List<dynamic>).map((e) => CommentModel(
+        //   user: e['user'] as String,
+        //   text: e['text'] as String,
+        // )).toList(),
       );
-
-  factory NewsModel.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    final data = snapshot.data();
-    return NewsModel(
-      title: data?['title'] as String,
-      id: data?['id'] as String,
-      description: data?['description'] as String,
-      date: data?['date'] as String,
-      image: data?['image'] as String,
-      created_by: data?['created_by'] as String,
-    );
-  }
-
-  factory NewsModel.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc){
-    final data = doc.data()!;
-    return NewsModel(
-      title: data['title'] as String,
-      id: "",
-      description: data['description'] as String,
-      date: data['date'] as String,
-      image: data['image'] as String,
-      created_by: data['created_by'] as String,
-    );
-  }
-
-  // factory NewsModel.fromSnapshot(QuerySnapshot<Map<String, dynamic>> doc, int index){
-  //   final data = doc.docs[index].data();
-  //   return NewsModel(
-  //     title: data['title'] as String,
-  //     id: "",
-  //     description: data['description'] as String,
-  //     date: data['date'] as String,
-  //     image: data['image'] as String,
-  //     created_by: data['created_by'] as String,
-  //   );
-  // }
 
   Map<String, Object?> toJson() {
     return {
@@ -82,18 +52,27 @@ class NewsModel {
       "date": date,
       "image": image,
       "created_by": created_by,
+      // "comments": comments.map((e) => e.toJson()).toList(),
     };
   }
 
   factory NewsModel.fromSnapshot(AsyncSnapshot<QuerySnapshot<Object?>> snapshot, int index) {
     final data = snapshot.data!.docs[index];
+    // final comments = data['comments'].map((e) => CommentModel(
+    //   user: e['user'] as String,
+    //   text: e['text'] as String,
+    // )).toList();
+    final List<CommentModel> comments = (data['comments'] as List<dynamic>).map((e) => CommentModel.fromJson(e)).toList();
+
+    // comments.forEach((e) => {debugPrint('coment.user = ${e.user}')});
     return NewsModel(
             title: data['title'] as String,
-            id: "",
+            id: data.id,
             description: data['description'] as String,
             date: data['date'] as String,
             image: data['image'] as String,
             created_by: data['created_by'] as String,
+            comments: comments,
           );
   }
 }
@@ -105,10 +84,11 @@ class CommentModel {
 
   CommentModel({required this.user, required this.text});
 
-  CommentModel.fromJson(Map<String, Object?> json)
+  CommentModel.fromJson(Map<String, dynamic> json)
     : this(user: json['user'] as String, text: json['text'] as String);
 
-  Map<String, Object?> toJson() {
+  Map<String, dynamic> toJson() {
     return {"user": user, "text": text};
   }
+
 }

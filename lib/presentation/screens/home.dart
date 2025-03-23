@@ -81,8 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
           if (news.isEmpty) {
             return const Center(child: Text('There are not news'));
           }
-          // news.forEach((news) => debugPrint('data firestore = ${news}'));
-          debugPrint('data firestore = $news');
           return ListView.builder(
             itemCount: news.length,
             itemBuilder: (context, index) {
@@ -110,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ,
                     title: Text(new1.title),
                     subtitle: Text(new1.description),
-                    // title: Text("${snapshot.data!.docs[index]["title"]}"),
                   ),
                 )
               );
