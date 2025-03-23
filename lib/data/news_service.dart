@@ -16,42 +16,22 @@ class NewsService {
     db.settings = const Settings(persistenceEnabled: true);
     db.enableNetwork();
     _news = db.collection("news").withConverter<NewsModel>(
-        fromFirestore: (snapshots, _) =>
-            NewsModel.fromJson(snapshots.data()!),
+        // fromFirestore: NewsModel.fromFirestore,
+            fromFirestore: (snapshots, _) => NewsModel.fromJson(snapshots.data()!),
         toFirestore: (newsModel, _) => newsModel.toJson()
     );
   }
 
+  Future<List<NewsModel>> getNewsList() async {
+    final a = await db.collection("news").get();
+    for(var doc in a.docs){
+      debugPrint("doc = ${doc.data() as Map<String, NewsModel>}");
+    }
+    return [];
+  }
+
+
   Stream<QuerySnapshot> getNews() {
-    // try{
-    //
-    //   QuerySnapshot qn = await db.collection("news").get();
-    //   for(var doc in qn.docs){
-    //     debugPrint('doc data = ${doc.data()}');
-    //   }
-    // }catch(e){
-    //     debugPrint('error get data = ${e.toString()}');
-    //
-    // }
-
-    // try {
-    //   _news = db.collection("news").withConverter<NewsModel>(
-    //       fromFirestore: (snapshots, _) =>
-    //           NewsModel.fromJson(snapshots.data()!),
-    //       toFirestore: (newsModel, _) => newsModel.toJson()
-    //   );
-    // } on FirebaseException catch (e){
-    //   debugPrint('firebase firestore error: ${e.message}');
-    // }
-
-
-    // _news.snapshots().listen((QuerySnapshot snapshot) {
-    //   for(var doc in snapshot.docs){
-    //     debugPrint('doc = ${doc.data()}');
-    //   }
-    // });
-
-
     return _news.snapshots();
   }
 
