@@ -6,6 +6,7 @@ import 'package:myapp/data/auth_service.dart';
 import 'package:myapp/data/news_service.dart';
 
 import '../../core/models/newsModel.dart';
+import 'detail.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -55,20 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              NewsList(),
-
-              MaterialButton(
-                onPressed: newsService.value.getNews,
-                minWidth: double.infinity,
-                color: Colors.deepPurple,
-                textColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                ),
-                child: Text('Get News'),
-              ),
-            ],
+            children: <Widget>[NewsList(),],
           ),
         ),
       ),
@@ -100,12 +88,31 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (context, index) {
               NewsModel new1 = NewsModel.fromSnapshot(snapshot, index);
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                child: ListTile(
-                  title: Text(new1.title),
-                  subtitle: Text(new1.description),
-                  // title: Text("${snapshot.data!.docs[index]["title"]}"),
-                ),
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                child: Card(
+                  elevation: 4,
+                  margin: EdgeInsets.only(bottom: 10),
+                  child:
+                  ListTile(
+                    onTap: () { Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DetailScreen(new1: new1,))
+                    ); },
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        new1.image,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                    ,
+                    title: Text(new1.title),
+                    subtitle: Text(new1.description),
+                    // title: Text("${snapshot.data!.docs[index]["title"]}"),
+                  ),
+                )
               );
             },
           );
