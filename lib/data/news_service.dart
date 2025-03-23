@@ -16,20 +16,10 @@ class NewsService {
     db.settings = const Settings(persistenceEnabled: true);
     db.enableNetwork();
     _news = db.collection("news").withConverter<NewsModel>(
-        // fromFirestore: NewsModel.fromFirestore,
-            fromFirestore: (snapshots, _) => NewsModel.fromJson(snapshots.data()!),
+        fromFirestore: (snapshots, _) => NewsModel.fromJson(snapshots.data()!),
         toFirestore: (newsModel, _) => newsModel.toJson()
     );
   }
-
-  Future<List<NewsModel>> getNewsList() async {
-    final a = await db.collection("news").get();
-    for(var doc in a.docs){
-      debugPrint("doc = ${doc.data() as Map<String, NewsModel>}");
-    }
-    return [];
-  }
-
 
   Stream<QuerySnapshot> getNews() {
     return _news.snapshots();

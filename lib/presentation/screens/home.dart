@@ -29,10 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void getNews() async {
-    newsService.value.getNewsList();
-    // newsService.value.getNews();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
               NewsList(),
 
               MaterialButton(
-                onPressed: getNews,
+                onPressed: newsService.value.getNews,
                 minWidth: double.infinity,
                 color: Colors.deepPurple,
                 textColor: Colors.white,
@@ -84,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
       height: MediaQuery.sizeOf(context).height * 0.8,
       width: MediaQuery.sizeOf(context).width,
       child: StreamBuilder<QuerySnapshot>(
-        stream: newsService.value.db.collection("news").snapshots(),
+        stream: newsService.value.getNews(),
         builder: (context, snapshot) {
 
           if (snapshot.connectionState != ConnectionState.active) {
@@ -102,11 +98,13 @@ class _HomeScreenState extends State<HomeScreen> {
           return ListView.builder(
             itemCount: news.length,
             itemBuilder: (context, index) {
-
+              NewsModel new1 = NewsModel.fromSnapshot(snapshot, index);
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 child: ListTile(
-                  title: Text("${snapshot.data!.docs[index]["title"]}"),
+                  title: Text(new1.title),
+                  subtitle: Text(new1.description),
+                  // title: Text("${snapshot.data!.docs[index]["title"]}"),
                 ),
               );
             },

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/src/widgets/async.dart';
 import 'package:json_annotation/json_annotation.dart';
 // part '';//''newsModel.g.dart';
 
@@ -61,17 +62,17 @@ class NewsModel {
     );
   }
 
-  factory NewsModel.fromSnapshot(DocumentSnapshot doc){
-    final data = doc.data() as Map<String, dynamic>;
-    return NewsModel(
-      title: data['title'] as String,
-      id: "",
-      description: data['description'] as String,
-      date: data['date'] as String,
-      image: data['image'] as String,
-      created_by: data['created_by'] as String,
-    );
-  }
+  // factory NewsModel.fromSnapshot(QuerySnapshot<Map<String, dynamic>> doc, int index){
+  //   final data = doc.docs[index].data();
+  //   return NewsModel(
+  //     title: data['title'] as String,
+  //     id: "",
+  //     description: data['description'] as String,
+  //     date: data['date'] as String,
+  //     image: data['image'] as String,
+  //     created_by: data['created_by'] as String,
+  //   );
+  // }
 
   Map<String, Object?> toJson() {
     return {
@@ -82,6 +83,18 @@ class NewsModel {
       "image": image,
       "created_by": created_by,
     };
+  }
+
+  factory NewsModel.fromSnapshot(AsyncSnapshot<QuerySnapshot<Object?>> snapshot, int index) {
+    final data = snapshot.data!.docs[index];
+    return NewsModel(
+            title: data['title'] as String,
+            id: "",
+            description: data['description'] as String,
+            date: data['date'] as String,
+            image: data['image'] as String,
+            created_by: data['created_by'] as String,
+          );
   }
 }
 
