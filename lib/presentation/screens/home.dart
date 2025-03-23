@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/data/auth_service.dart';
+import 'package:myapp/data/news_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -30,12 +31,17 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void getNews() async {
+    newsService.value.getNews();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
         canPop: false,
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: Theme
                 .of(context)
@@ -60,16 +66,17 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
 
+                NewsList(),
+
                 MaterialButton(
-                  onPressed: signOut,
+                  onPressed: getNews,
                   minWidth: double.infinity,
                   color: Colors.deepPurple,
                   textColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0)),
-                  child: Text('Login'),
+                  child: Text('Get News'),
                 ),
-
 
               ],
             ),
@@ -77,6 +84,26 @@ class _HomeScreenState extends State<HomeScreen> {
         )
     );
 
+  }
+
+  Widget NewsList(){
+    return SizedBox(
+      height: MediaQuery.sizeOf(context).height * 0.8,
+      width: MediaQuery.sizeOf(context).width,
+      child: StreamBuilder(
+        stream: newsService.value.getNews(),
+        builder: (context, snapshot) {
+          List news = snapshot.data?.docs ?? [];
+          if(news.isEmpty){
+            return const Center(
+                child: Text('There are not news'),
+            );
+          }
+          debugPrint('data firestore = $news');
+          return ListView();
+        },
+      ),
+    );
   }
 }
 
